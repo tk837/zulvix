@@ -1496,12 +1496,13 @@ async function sendMessage() {
       // Stop if aborted (user switched chat)
       if (signal.aborted) return;
       if (i < reply.length) {
-        textEl.innerHTML = renderMarkdown(reply.slice(0, i + 1));
+        // Show plain text while typing to avoid broken mid-string markdown/LaTeX parsing
+        textEl.textContent = reply.slice(0, i + 1);
         i++;
         msgs.scrollTop = msgs.scrollHeight;
         setTimeout(typeChar, 8);
       } else {
-        // Final render pass — now render LaTeX properly
+        // Final render pass — do full markdown + LaTeX render only when complete
         textEl.innerHTML = renderMarkdown(reply);
         renderLatexInElement(textEl);
         msgs.scrollTop = msgs.scrollHeight;
